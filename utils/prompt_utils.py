@@ -11,11 +11,8 @@ if root_dir not in sys.path:
     sys.path.insert(0, root_dir)
 
 
-def load_prompt(prompt):
-    system_prompts_dir = os.path.join(root_dir, "hackbot", "system_prompts")
-    os.makedirs(system_prompts_dir, exist_ok=True)
-
-    full_path = os.path.join(system_prompts_dir, f"{prompt}.txt")
+def load_prompt(prompt_path: str):
+    full_path = os.path.join(root_dir, f"{prompt_path}")
 
     try:
         file_path = str(full_path)
@@ -27,10 +24,3 @@ def load_prompt(prompt):
     except FileNotFoundError:
         raise FileNotFoundError(f"Prompt file not found: {full_path}")
 
-
-def obs_dict_of_last_event(events, obs_descriptor):
-    obs_dict = {}
-    for key, description, state_type in obs_descriptor:
-        value = events[-1][1][key]
-        obs_dict[key] = f"{description}{value}\n\n"
-    return obs_dict
