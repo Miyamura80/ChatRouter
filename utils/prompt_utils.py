@@ -4,7 +4,7 @@ import os
 import sys
 
 # Find the root directory of the project
-root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
 # Add the root directory to sys.path if it's not already there
 if root_dir not in sys.path:
