@@ -17,6 +17,7 @@ class DictWrapper:
 
 class Config:
     OPENAI_API_KEY: str = os.environ.get("OPENAI_API_KEY")
+    HELICONE_API_KEY: str = os.environ.get("HELICONE_API_KEY")
 
     def __init__(self):
         with open("global_config/global_config.yaml", "r") as file:
