@@ -23,4 +23,3 @@ def load_prompt(prompt_path: str):
             return fp.read()
     except FileNotFoundError:
         raise FileNotFoundError(f"Prompt file not found: {full_path}")
-
