@@ -15,9 +15,9 @@ class ChatRouter:
 
         # We use cheaper models for testing
         model_name = (
-            config_dict["model_name"] or global_config.model_name
+            global_config.cheap_model_name
             if "test" in config_dict and config_dict["test"]
-            else global_config.cheap_model_name
+            else config_dict["model_name"] or global_config.model_name
         )
 
         if type == "helicone":
