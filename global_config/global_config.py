@@ -31,6 +31,17 @@ class Config:
     def __getattr__(self, name):
         raise AttributeError(f"'Config' object has no attribute '{name}'")
 
+    def to_dict(self):
+        def unwrap(obj):
+            if isinstance(obj, DictWrapper):
+                return {k: unwrap(v) for k, v in obj.__dict__.items()}
+            elif isinstance(obj, list):
+                return [unwrap(item) for item in obj]
+            else:
+                return obj
+
+        return {k: unwrap(v) for k, v in self.__dict__.items()}
+
 
 # Create a singleton instance
 global_config = Config()
