@@ -1,9 +1,21 @@
 import os
 from typing import Any, Dict
 import yaml
-from dotenv import load_dotenv
+from pathlib import Path
+from dotenv import load_dotenv, dotenv_values
+import warnings
 
-load_dotenv()
+# Get the path to the root directory (one level up from global_config)
+root_dir = Path(__file__).parent.parent
+
+# Load .env file from the root directory
+load_dotenv(dotenv_path=root_dir / ".env")
+
+# Check if .env file has been properly loaded
+env_values = dotenv_values(root_dir / ".env")
+is_local = os.getenv("GITHUB_ACTIONS") != "true"
+if not env_values and is_local:
+    warnings.warn(".env file not found or empty", UserWarning)
 
 
 class DictWrapper:
@@ -16,8 +28,7 @@ class DictWrapper:
 
 
 class Config:
-    OPENAI_API_KEY: str = os.environ.get("OPENAI_API_KEY")
-    HELICONE_API_KEY: str = os.environ.get("HELICONE_API_KEY")
+    _env_keys = ["OPENAI_API_KEY", "HELICONE_API_KEY"]
 
     def __init__(self):
         with open("global_config/global_config.yaml", "r") as file:
@@ -27,6 +38,13 @@ class Config:
                 setattr(self, key, DictWrapper(value))
             else:
                 setattr(self, key, value)
+
+        # Assert we found all necessary keys
+        for key in self._env_keys:
+            if os.environ.get(key) is None:
+                raise ValueError(f"Environment variable {key} not found")
+            else:
+                setattr(self, key, os.environ.get(key))
 
     def __getattr__(self, name):
         raise AttributeError(f"'Config' object has no attribute '{name}'")
